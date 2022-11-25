@@ -19,22 +19,22 @@
   <br />
 
   <br />
-  <div id="descriptions" v-if="update">
-    <h2 id="title">{{ update.original_title }}</h2>
+  <div id="descriptions">
+    <h2 id="title"> {{ title }} </h2>
     <div id="overviewtitle">Overview:</div>
-    <div id="overview">{{ update.overview }}</div>
-    <p>Budget: {{ update.budget }}</p>
-    <p>popularity: {{ update.popularity }}</p>
-    <p>Average vote: {{ update.vote_average }}</p>
-    <p>Vote Count: {{ update.vote_count }}</p>
-    <p>Original Language: {{ update.original_language }}</p>
-    <p>Adult content: {{ update.adult }}</p>
-    <p>Release Date: {{ update.release_date }}</p>
-    <p>Revenue: {{ update.revenue }}</p>
-    <p>Runtime: {{ update.runtime }}</p>
-
+    <div id="overView"> {{ overview }} </div>
     <img :src="posterPath" id="idName" />
-    <iframe id="idiframe" :src="trailerPath"></iframe>
+    <iframe id="idiframe" :src="trailer"></iframe>
+    <p>Budget: {{ budget }} </p>
+    <p>popularity: {{ popularity }}</p>
+    <p>Average vote: {{ averagevote }} </p>
+    <p>Vote Count: {{ votecount }} </p>
+    <p>Original Language: {{ originallanguage }} </p>
+    <p>Adult content: {{ adultcontent }} </p>
+    <p>Release Date: {{ releasedate }} </p>
+    <p>Revenue: {{ revenue }} </p>
+    <p>Runtime: {{ runtime }} </p>
+
   </div>
 </template>
 
@@ -42,39 +42,44 @@
 import axios from "axios";
 import { ref } from "vue";
 const name = ref(null);
-const update = ref(null);
 let posterPath = ref(null);
 let trailerPath = ref(null);
-let Budget = ref(null);
-const popularity = ref(null);
-const Averagevote = ref(null);
-const VoteCount = ref(null);
-const OriginalLanguage = ref(null);
-const Adultcontent = ref(null);
-const ReleaseDate = ref(null);
-const Revenue = ref(null);
-const Runtime = ref(null);
-let searchUpdate;
+let title = ref("");
+let overview = ref("");
+let budget = ref("")
+let popularity = ref("");
+let trailer = ref("");
+let averagevote = ref("");
+let votecount = ref("");
+let originallanguage = ref("");
+let adultcontent = ref("");
+let releasedate = ref("");
+let revenue = ref("");
+let runtime = ref("");
 
 function getmovie() {
-  const info = async () => {
-    const moviename = name.value;
-    searchUpdate = axios.get(`https://api.themoviedb.org/3/movie/${moviename}`, {
-      params: {
-        api_key: "a59d2813d99007b086e055a41d8a036f",
-        include_adult: "false",
-      },
-    });
-  };
-  let newUpdateposter = searchUpdate.then((movieData) => {
-    // update.value = movieposters.data;
-    // posterPath = "https://image.tmdb.org/t/p/w500/" + update.value.poster_path;
-    // trailerPath =
-    //   "https://www.youtube.com/embed/" +
-    //   movieposters.data.results[0].videos.results
-    //     .filter((trailer) => trailer.type === "Trailer")
-    //     .at(0).key;
-    // Budget = update.value.budget;
+  let search = axios.get(`https://api.themoviedb.org/3/movie/${name.value}`, {
+    params: {
+      api_key: "e06cb446302dcf3a3cb1358720141aad",
+      append_to_response: "videos",
+    },
+  });
+  let searchResult = search.then((movieData) => {
+
+    posterPath.value = `https://image.tmdb.org/t/p/w500/${movieData.data.poster_path}`
+    trailer.value = "https://www.youtube.com/embed/" + (movieData.data.videos.results.filter((trailer) => trailer.type === "Trailer")).at(0).key;
+
+    title.value = movieData.data.original_title; 
+    overview.value = movieData.data.overview
+    budget.value = movieData.data.budget
+    popularity.value = movieData.data.popularity;
+    averagevote.value = movieData.data.vote_average
+    votecount.value = movieData.data.vote_count
+    originallanguage.value = movieData.data.original_language
+    adultcontent.value = movieData.data.adult
+    releasedate.value = movieData.data.release_date
+    revenue.value = movieData.data.revenue
+    runtime.value = movieData.data.runtime
   });
 }
 </script>
@@ -87,19 +92,35 @@ h2 {
 }
 
 h2 {
-  font-size: 32px;
+  font-size: 26px;
 }
 
 p {
-  font-size: 24px;
+  font-size: 22px;
   position: relative;
-  left: 7vw;
+  left: 5vw;
   margin: 44px;
 }
+ iframe {
+  float: right;
+  position: relative;
+  height: 15vw;
+  width: 30vw;
+  right: 10vw;
+  top: 9vw;
 
-#a {
+ }
+
+ img {
+  float: right;
+  position: relative;
+  width: 24vw;
+ }
+
+#overView {
   text-align: center;
-  font-size: 17.25px;
+  font-size: 18px;
+  margin: 20px;
 }
 
 #selection {
